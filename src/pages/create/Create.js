@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState,useRef } from 'react'
 
 // styles
 import './Create.css'
@@ -8,10 +8,30 @@ export default function Create() {
   const [method, setMethod] = useState('')
   const [cookingTime, setCookingTime] = useState('')
 
+//   track one new ingredient being added
+  const [newIngredient, setNewIngredient] = useState('')
+//   track the current list of ingredients
+  const [ingredients, setIngredients] = useState([])
+  const ingredientInput = useRef(null)
+
+
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(title,method,cookingTime)
+    console.log(title,method,cookingTime,ingredients)
   }
+
+  const handleAdd = (e) => {
+    e.preventDefault()
+    const ing = newIngredient.trim()
+    // ensure ing is not empty and current list doesnt include ing
+    if (ing && !ingredients.includes(ing)){
+        setIngredients(prevIngs => [...prevIngs, ing])
+    }
+
+    setNewIngredient('')
+    ingredientInput.current.focus()
+  }
+
 
   return (
     <div className='create'>
@@ -29,6 +49,21 @@ export default function Create() {
             </label>
 
             {/* Ingredients here */}
+            <label>
+                <span>Recipe ingredients:</span>
+                <div className="ingredients">
+                    <input 
+                        type="text" 
+                        onChange={(e) => setNewIngredient(e.target.value)}
+                        value={newIngredient}
+                        ref={ingredientInput}
+                    />
+                    <button onClick={handleAdd} className="btn">Add</button>
+                </div>
+            </label>
+            <p>Current ingredients: 
+                {ingredients.map(ing => <em key={ing}>{ing}, </em>)}
+            </p>
 
             <label>
                 <span>Recipe method:</span>
@@ -38,6 +73,7 @@ export default function Create() {
                     required
                 />
             </label>
+
             <label>
                 <span>Cooking time (minutes):</span>
                 <input 

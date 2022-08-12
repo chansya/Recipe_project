@@ -30,7 +30,7 @@ function App() {
             <Search />
           </Route>
 
-          {/* dynamic route */}
+          {/* dynamic route for individual recipe */}
           <Route path="/recipes/:id">
             <Recipe/>
           </Route>
